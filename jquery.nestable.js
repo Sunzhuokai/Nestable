@@ -462,7 +462,8 @@
     $.fn.nestable = function(params)
     {
         var lists  = this,
-            retval = this;
+            retval = this,
+            args   = arguments;
 
         lists.each(function()
         {
@@ -473,7 +474,16 @@
                 $(this).data("nestable-id", new Date().getTime());
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
-                    retval = plugin[params]();
+                      if (args.length > 1){
+                        var pluginArgs = [];
+                        for (var i = 1; i < args.length; i++) {
+                            pluginArgs.push(args[i]);
+                        }
+                        retval = plugin[params].apply(plugin, pluginArgs);
+                    }
+                    else {
+                        retval = plugin[params]();
+                    }
                 }
             }
         });
